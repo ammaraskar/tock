@@ -57,6 +57,7 @@ pub mod proximity;
 pub mod rf233;
 pub mod rf233_const;
 pub mod rng;
+pub mod rudra_driver;
 pub mod screen;
 pub mod sdcard;
 pub mod segger_rtt;

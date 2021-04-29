@@ -59,6 +59,7 @@ struct HiFive1 {
         'static,
         VirtualMuxAlarm<'static, rv32i::machine_timer::MachineTimer<'static>>,
     >,
+    _rudra: &'static capsules::rudra_driver::RudraDriver,
 }
 
 /// Mapping of integer syscalls to objects that implement syscalls.
@@ -199,6 +200,11 @@ pub unsafe fn reset_handler() {
 
     let lldb = components::lldb::LowLevelDebugComponent::new(board_kernel, uart_mux).finalize(());
 
+    let rudra = static_init!(
+        capsules::rudra_driver::RudraDriver,
+        capsules::rudra_driver::RudraDriver::new()
+    );
+
     // Need two debug!() calls to actually test with QEMU. QEMU seems to have
     // a much larger UART TX buffer (or it transmits faster).
     debug!("HiFive1 initialization complete.");
@@ -221,6 +227,7 @@ pub unsafe fn reset_handler() {
         alarm: alarm,
         lldb: lldb,
         led,
+        _rudra: rudra,
     };
 
     kernel::procs::load_processes(
